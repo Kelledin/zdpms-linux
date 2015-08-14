@@ -1,0 +1,11 @@
+Building from source is fairly simple, if you have all of the following:
+
+ - Basic system development libraries, plus a C toolchain ("apt-get install
+   build-essential" on Debian-based distributions)
+ - The libhidapi-hidraw libraries, plus development headers ("apt-get install
+   libhidapi-dev" on Debian-based distributions)
+ - pkg-config ("apt-get install pkg-config" on Debian-based distributions)
+
+Afterwards, just type "make".  Currently all it does is build zdpms-config,
+which you can run in place and/or copy to a system path.
+
