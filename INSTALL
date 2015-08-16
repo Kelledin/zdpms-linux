@@ -1,11 +1,17 @@
 Building from source is fairly simple, if you have all of the following:
 
- - Basic system development libraries, plus a C toolchain ("apt-get install
-   build-essential" on Debian-based distributions)
- - The libhidapi-hidraw libraries, plus development headers ("apt-get install
-   libhidapi-dev" on Debian-based distributions)
+ - Basic system development libraries, plus a C toolchaini
+   ("apt-get install build-essential" on Debian-based distributions)
+ - The libhidapi-hidraw libraries, plus development headers
+   ("apt-get install libhidapi-dev" on Debian-based distributions)
  - pkg-config ("apt-get install pkg-config" on Debian-based distributions)
+ - Enough of the Linux kernel source to build out-of-tree modules
+   ("apt-get install linux-headers-generic" on Ubuntu)
 
-Afterwards, just type "make".  Currently all it does is build zdpms-config,
-which you can run in place and/or copy to a system path.
+Once everything is in place, you can run "make" to build everything, then
+run "make install" to install everything.  There are certain variables you
+can set (PREFIX, CFLAGS, CXXFLAGS, KDIR, DESTDIR) to customize install
+locations, kernel source tree selection, and build options.  So far this
+has been tested on Ubuntu 15.04 amd64, but I know of no reason it shouldn't
+work on other distributions.
 

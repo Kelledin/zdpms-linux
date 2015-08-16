@@ -3,31 +3,54 @@ Enermax ZDPMS Support
 
 This project is intended to provide support for the monitoring and control
 logic embedded in some Enermax power supplies (notably the Enermax DigiFanless
-550W). The initial development includes a user-space proof-of-concept utility
-based on the cross-platform libhidapi library; future plans include the
-creation of a Linux kernel driver to tie the ZDPMS support into the "hwmon"
-subsystem used by lm-sensors, plus potentially support for other Enermax
-products.
+550W).  The initial development includes a user-space proof-of-concept utility
+based on the cross-platform libhidapi library, plus an experimental Linux
+kernel driver to tie the ZDPMS support into the "hwmon" subsystem used by
+lm-sensors.  If Enermax uses similar ZDPMS controller technology in other
+power supplies, support for these other power supplies may be included in the
+future.
 
 
 1. What Works
 
 The userland zdpms-config utility is apparently able to query and correctly
 interpret all DC rail sensors and temperature sensors on the DigiFanless 550W,
-plus the AC input voltage and the model-number string. It can also configure
+plus the AC input voltage and the model-number string.  It can also configure
 the 12V rails for single-rail or dual-rail operation with the correct
 command-line options.
+
+The kernel-land hid-zdpms driver is usable; however, in order to use it with
+existing kernels, it is necessary to unbind any supported devices from the
+generic HID driver.  To see if your ZDPMS controller is bound to this driver,
+you can most likely look under /sys/bus/hid/drivers/hid-generic on recent
+kernels such as 3.19 (older kernels might use "usb-generic" or "generic-usb"
+instead of "hid-generic").  For every device bound to this driver, there will
+be a symlink, named something similar to "0123:4567:89ab.cdef" to represent a
+device:vendor-id:product-id.function.  Currently-supported ZDPMS controllers
+will show up as "<device>:04D8:F590:<function>".  To unbind a device from this
+driver, echo the symlink basename (without newlines) out to
+/sys/bus/hid/drivers/hid-generic/unbind as root, i.e. 
+
+    echo -n '0003:04D8:F590:0001' > /sys/bus/hid/drivers/hid-generic/unbind
+
+At this point, you can load the hid-zdpms driver via insmod (or modprobe,
+if it's already properly installed in your /lib/modules/ tree).  If it's
+already loaded when you unbind the device from hid-generic, it will NOT
+automatically bind to the zdpms driver; you will need to unload and reload
+the driver, or use the device token from above as follows:
+
+    echo -n '0003:04D8:F590:0001' > /sys/bus/hid/drivers/zdpms/bind
+
+If/when the kernel driver gets merged with the standard Linux kernel, we
+can take measures to make the above steps unnecessary, but this will require
+a code change in hid-core (basically updating the "hid_have_special_driver"
+list).
 
 
 2. What Doesn't Work
 
 I haven't yet figured out how to query the power factor, apparent power usage
-(VA), or actual power usage (watts) on the AC input side. Theoretically, with
-all the other sensor information I have, I should only need two of these
-readings to extrapolate the third.
-
-I'm also hammering on a Linux kernel driver, but the ZDPMS controller
-apparently doesn't advertise all the needed HID report descriptors, and it
-will take some hackery to work around this. libhidapi apparently avoids this
-problem by not relying on report descriptor enumeration.
+(volt-amperes), or actual power usage (watts) on the AC input side.
+Theoretically, with all the other sensor information I have, I should only need
+two of these readings to extrapolate the third.
 
