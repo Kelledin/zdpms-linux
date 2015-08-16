@@ -2,6 +2,9 @@
  *  Linux hwmon driver for Enermax ZDPMS controller
  *
  *  Copyright (c) 2015 Frank Schaefer <kelledin@gmail.com>
+ *
+ *  The name "Enermax" (and possibly "DigiFanless" and "ZDPMS") are trademark
+ *  Enermax Inc (http://www.enermax.com/).
  */
 
 /*

@@ -10,6 +10,10 @@ lm-sensors.  If Enermax uses similar ZDPMS controller technology in other
 power supplies, support for these other power supplies may be included in the
 future.
 
+Note that this driver is NOT maintained by Enermax or any of its subsidiaries.
+I'm not affiliated with Enermax; I just bought one of their power supplies.
+The name "Enermax" (and possibly "DigiFanless" and "ZDPMS") are trademark
+Enermax Inc (http://www.enermax.com/).
 
 1. What Works
 
