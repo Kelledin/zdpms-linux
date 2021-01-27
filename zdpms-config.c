@@ -22,7 +22,7 @@
 #include <math.h>
 #include <getopt.h>
 
-#include "hidapi.h"
+#include <hidapi/hidapi.h>
 
 #define ZDPMS_VENDOR_ID   0x04d8
 #define ZDPMS_PRODUCT_ID  0xf590
